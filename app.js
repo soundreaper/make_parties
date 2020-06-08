@@ -1,5 +1,6 @@
 // Initialize express
 const express = require('express')
+const methodOverride = require('method-override')
 const app = express()
 
 // require handlebars
@@ -23,6 +24,9 @@ const models = require('./db/models');
 
 // The following line must appear AFTER const app = express() and before your routes!
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// override with POST having ?_method=DELETE or ?_method=PUT
+app.use(methodOverride('_method'))
 
 // OUR MOCK ARRAY OF PROJECTS
 var events = [
@@ -63,6 +67,28 @@ app.get('/events/:id', (req, res) => {
     console.log(err.message);
   })
 })
+
+// EDIT
+app.get('/events/:id/edit', (req, res) => {
+  models.Event.findByPk(req.params.id).then((event) => {
+    res.render('events-edit', { event: event });
+  }).catch((err) => {
+    console.log(err.message);
+  })
+});
+
+// UPDATE
+app.put('/events/:id', (req, res) => {
+  models.Event.findByPk(req.params.id).then(event => {
+    event.update(req.body).then(event => {
+      res.redirect(`/events/${req.params.id}`);
+    }).catch((err) => {
+      console.log(err);
+    });
+  }).catch((err) => {
+    console.log(err);
+  });
+});
 
 // Choose a port to listen on
 const port = process.env.PORT || 3000;
