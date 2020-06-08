@@ -36,6 +36,7 @@ var events = [
 ]
 
 require('./controllers/events')(app, models);
+require('./controllers/rsvps')(app, models);
 
 // Choose a port to listen on
 const port = process.env.PORT || 3000;
