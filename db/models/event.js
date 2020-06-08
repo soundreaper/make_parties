@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     imgUrl: DataTypes.STRING
   }, {});
   Event.associate = function(models) {
-    // associations can be defined here
+    Event.hasMany(models.Rsvp);
   };
   return Event;
 };
